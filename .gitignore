@@ -1,0 +1,4 @@
+.ccls-cache/
+.DS_Store
+main.dSYM/
+dist/
