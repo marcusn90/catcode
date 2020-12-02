@@ -408,5 +408,11 @@ void editor_sync_with_active(EditorBuffer *active_eb, EditorBuffer *dst_eb) {
   if (strcmp(active_eb->assoc_file, dst_eb->assoc_file) == 0) {
     dst_eb->total_lines_num = active_eb->total_lines_num;
     dst_eb->lines_head = active_eb->lines_head;
+
+    // update active line
+    if (dst_eb->active_line_idx > dst_eb->total_lines_num) {
+      dst_eb->active_line_idx = dst_eb->total_lines_num;
+    }
+    editor_adjust_cursor_on_active_line(dst_eb);
   }
 }

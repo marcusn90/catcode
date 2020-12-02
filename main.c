@@ -156,6 +156,9 @@ int main(int argc, char **argv) {
         break;
       } // switch
 
+      // update active buffer ref after event handlers
+      active_eb = open_editor_buffers[active_eb_idx];
+
       if (should_render) {
         if (open_editor_buffers[1] != NULL) {
           editor_sync_with_active(active_eb,
