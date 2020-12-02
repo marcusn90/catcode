@@ -14,8 +14,11 @@
 
 #define WIN_WIDTH 800
 #define WIN_HEIGHT 600
+#define MAX_OPEN_EDITOR_BUFFERS 2
 
 #define DEFAULT_FONT_PATH "fonts/Inconsolata-Regular.ttf"
+
+EditorBuffer *open_editor_buffers[MAX_OPEN_EDITOR_BUFFERS] = {0};
 
 int main(int argc, char **argv) {
   printf("Starting vzheditor...\n");
@@ -60,7 +63,7 @@ int main(int argc, char **argv) {
 
   EditorBuffer eb_1 = {
       .tr_props = tr_props,
-      .view_props = (EditorViewProps){WIN_WIDTH / 3, WIN_HEIGHT, 0, 0},
+      .view_props = (EditorViewProps){WIN_WIDTH, WIN_HEIGHT, 0, 0},
       .max_visible_lines = (ui32)(WIN_HEIGHT / tr_props.line_height),
       // index of the top most line visible in editor
       .first_visible_line_idx = 1,
@@ -70,20 +73,15 @@ int main(int argc, char **argv) {
       .cursor_pos = 0,
       .main_text_offset_x = 0,
       .main_text_offset_y = 0};
+
+  open_editor_buffers[0] = &eb_1;
+  i32 active_eb_idx = 0;
+
   if (file_path != NULL) {
-    FILE *f = fopen(*file_path, "r");
-    assert(f);
-    editor_init_from_file(&eb_1, f);
-    fclose(f);
-    f = NULL;
+    editor_init_from_file(&eb_1, file_path);
   } else {
     editor_init_empty(&eb_1);
   }
-
-  EditorBuffer eb_2 = eb_1;
-  eb_2.view_props.offset_x = WIN_WIDTH / 3;
-  EditorBuffer eb_3 = eb_1;
-  eb_3.view_props.offset_x = 2 * WIN_WIDTH / 3;
 
   uchar should_render = 1; // first render
   uchar quit = 0;
@@ -93,6 +91,7 @@ int main(int argc, char **argv) {
   } else if (eb_1.mode == EDITOR_MODE_INSERT) {
     SDL_StartTextInput();
   }
+  EditorBuffer *active_eb = NULL;
   while (!quit) {
     while (SDL_PollEvent(&e)) {
       if (e.type == SDL_QUIT) {
@@ -100,20 +99,57 @@ int main(int argc, char **argv) {
         quit = 1;
         break;
       }
+
+      active_eb = open_editor_buffers[active_eb_idx];
       switch (e.type) {
       case SDL_MOUSEBUTTONDOWN:
-        should_render = handle_mouse_button_down(e, &eb_1);
+        should_render = editor_controls_handle_mouse_button_down(e, active_eb);
         break;
 
       case SDL_MOUSEWHEEL:
-        should_render = handle_mousewheel(e, &eb_1);
+        should_render = editor_controls_handle_mousewheel(e, active_eb);
         break;
 
       case SDL_KEYDOWN:
-        should_render = handle_keydown(e, &eb_1);
+        if (active_eb->mode == EDITOR_MODE_NORMAL) {
+          switch (e.key.keysym.scancode) {
+          case SDL_SCANCODE_BACKSLASH: {
+            if (open_editor_buffers[1] == NULL) {
+              // split screen
+              EditorBuffer new_eb = *active_eb;
+              open_editor_buffers[1] = &new_eb;
+              open_editor_buffers[0]->view_props.width = WIN_WIDTH / 2;
+              open_editor_buffers[1]->view_props.width = WIN_WIDTH / 2;
+              open_editor_buffers[1]->view_props.offset_x = WIN_WIDTH / 2;
+              active_eb_idx = 1;
+            } else {
+              // back to single buffer
+              open_editor_buffers[1] = NULL;
+              open_editor_buffers[0]->view_props.width = WIN_WIDTH;
+              active_eb_idx = 0;
+            }
+            should_render = 1;
+            break;
+          }
+          case SDL_SCANCODE_1:
+            active_eb_idx = 0;
+            should_render = 1;
+            break;
+          case SDL_SCANCODE_2:
+            if (open_editor_buffers[1] != NULL) {
+              active_eb_idx = 1;
+            }
+            should_render = 1;
+            break;
+          default:
+            should_render = editor_controls_handle_keydown(e, active_eb);
+          }
+        } else {
+          should_render = editor_controls_handle_keydown(e, active_eb);
+        }
         break; // SDL_KEYDOWN
       case SDL_TEXTINPUT:
-        editor_insert_str_at_cursor(&eb_1, e.text.text);
+        editor_insert_str_at_cursor(active_eb, e.text.text);
         should_render = 1;
         break;
       default:
@@ -121,11 +157,18 @@ int main(int argc, char **argv) {
       } // switch
 
       if (should_render) {
+        if (open_editor_buffers[1] != NULL) {
+          editor_sync_with_active(active_eb,
+                                  open_editor_buffers[1 - active_eb_idx]);
+        }
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         SDL_RenderClear(renderer);
-        editor_view_draw(renderer, &eb_1);
-        editor_view_draw(renderer, &eb_2);
-        editor_view_draw(renderer, &eb_3);
+        for (i32 i = 0; i < MAX_OPEN_EDITOR_BUFFERS; ++i) {
+          if (open_editor_buffers[i] != NULL) {
+            editor_view_draw(renderer, open_editor_buffers[i],
+                             (uchar)active_eb_idx == i);
+          }
+        }
         SDL_RenderPresent(renderer);
         should_render = 0;
       }

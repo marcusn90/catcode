@@ -16,6 +16,7 @@ typedef struct EditorViewProps {
 } EditorViewProps;
 
 typedef struct EditorBuffer {
+  char assoc_file[1024];
   EditorMode mode;
   EditorViewProps view_props;
   TextRenderProps tr_props;
@@ -30,7 +31,7 @@ typedef struct EditorBuffer {
   ui32 main_text_offset_y;
 } EditorBuffer;
 
-i32 editor_init_from_file(EditorBuffer *eb, FILE *f);
+i32 editor_init_from_file(EditorBuffer *eb, char **file_path);
 void editor_init_empty(EditorBuffer *eb);
 
 void editor_set_mode_normal(EditorBuffer *eb);
@@ -66,5 +67,7 @@ void editor_move_cursor_to_current_word_start(EditorBuffer *eb);
 void editor_move_cursor_to_current_word_end(EditorBuffer *eb);
 i32 editor_move_cursor_to_next_word_start(EditorBuffer *eb);
 void editor_move_cursor_to_prev_word_start(EditorBuffer *eb);
+
+void editor_sync_with_active(EditorBuffer *active_eb, EditorBuffer *dst_eb);
 
 #endif

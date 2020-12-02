@@ -5,7 +5,14 @@
 #include "headers/editor_state.h"
 #include "headers/utils.h"
 
-i32 editor_init_from_file(EditorBuffer *eb, FILE *f) {
+i32 editor_init_from_file(EditorBuffer *eb, char **file_path) {
+  assert(file_path);
+  FILE *f = fopen(*file_path, "r");
+  assert(f);
+
+  memset(eb->assoc_file, 0, 1024);
+  strcpy(eb->assoc_file, file_path);
+
   i32 lines_num = 0;
   eb->lines_head = calloc(1, sizeof(TextLine));
 
@@ -27,6 +34,8 @@ i32 editor_init_from_file(EditorBuffer *eb, FILE *f) {
       str[len++] = (char)c;
     }
   }
+  fclose(f);
+  f = NULL;
 
   // check for last line without \n
   if (len) {
@@ -41,6 +50,10 @@ i32 editor_init_from_file(EditorBuffer *eb, FILE *f) {
   return eb->total_lines_num;
 }
 void editor_init_empty(EditorBuffer *eb) {
+  memset(eb->assoc_file, 0, 1024);
+  strcpy(eb->assoc_file,
+         "empty_file"); // TODO: generate random name as we could potentially
+                        // have 2 different empty files in split
   eb->lines_head = calloc(1, sizeof(TextLine));
   editor_clear_line(eb->lines_head);
   eb->total_lines_num = 1;
@@ -388,3 +401,12 @@ i32 editor_move_cursor_to_next_word_start(EditorBuffer *eb) {
 }
 
 void editor_move_cursor_to_prev_word_start(EditorBuffer *eb) {}
+
+void editor_sync_with_active(EditorBuffer *active_eb, EditorBuffer *dst_eb) {
+  assert(active_eb != NULL);
+  assert(dst_eb != NULL);
+  if (strcmp(active_eb->assoc_file, dst_eb->assoc_file) == 0) {
+    dst_eb->total_lines_num = active_eb->total_lines_num;
+    dst_eb->lines_head = active_eb->lines_head;
+  }
+}

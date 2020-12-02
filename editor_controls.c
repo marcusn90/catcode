@@ -2,7 +2,7 @@
 #include "headers/types.h"
 #include <SDL2/SDL.h>
 
-i32 handle_keydown(SDL_Event e, EditorBuffer *eb) {
+i32 editor_controls_handle_keydown(SDL_Event e, EditorBuffer *eb) {
   i32 should_render = 0;
   switch (e.key.keysym.scancode) {
   case SDL_SCANCODE_ESCAPE:
@@ -89,7 +89,7 @@ i32 handle_keydown(SDL_Event e, EditorBuffer *eb) {
   return should_render;
 }
 
-i32 handle_mousewheel(SDL_Event e, EditorBuffer *eb) {
+i32 editor_controls_handle_mousewheel(SDL_Event e, EditorBuffer *eb) {
   i32 should_render = 0;
   if (e.wheel.y > 0) {
     if (editor_scroll_n_lines(eb, -1) != -1) {
@@ -103,7 +103,7 @@ i32 handle_mousewheel(SDL_Event e, EditorBuffer *eb) {
   return should_render;
 }
 
-i32 handle_mouse_button_down(SDL_Event e, EditorBuffer *eb) {
+i32 editor_controls_handle_mouse_button_down(SDL_Event e, EditorBuffer *eb) {
   i32 should_render = 0;
   if (e.button.button == SDL_BUTTON_LEFT) {
     // TODO: editor should probably know about its text renderer and its

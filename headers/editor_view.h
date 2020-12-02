@@ -7,6 +7,7 @@
 #define MIN_LINE_NUMBER_PANEL_WIDTH_PX 20
 
 ui32 editor_view_max_chars_per_line(EditorBuffer *eb);
-void editor_view_draw(SDL_Renderer *renderer, EditorBuffer *eb);
+void editor_view_draw(SDL_Renderer *renderer, EditorBuffer *eb,
+                      uchar is_active);
 
 #endif
