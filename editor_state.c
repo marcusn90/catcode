@@ -402,6 +402,24 @@ i32 editor_move_cursor_to_next_word_start(EditorBuffer *eb) {
 
 void editor_move_cursor_to_prev_word_start(EditorBuffer *eb) {}
 
+void editor_clone_buffer(EditorBuffer *src, EditorBuffer *dst) {
+  assert(src != NULL);
+  assert(dst != NULL);
+  strncpy(dst->assoc_file, src->assoc_file, 1024);
+  dst->mode = src->mode;
+  dst->view_props = src->view_props;
+  dst->tr_props = src->tr_props;
+  dst->lines_head = src->lines_head;
+  dst->total_lines_num = src->total_lines_num;
+  dst->max_visible_lines = src->max_visible_lines;
+  dst->first_visible_line_idx = src->first_visible_line_idx;
+  dst->min_visible_lines_after_scroll = src->min_visible_lines_after_scroll;
+  dst->active_line_idx = src->active_line_idx;
+  dst->cursor_pos = src->cursor_pos;
+  dst->main_text_offset_x = src->main_text_offset_x;
+  dst->main_text_offset_y = src->main_text_offset_y;
+}
+
 void editor_sync_with_active(EditorBuffer *active_eb, EditorBuffer *dst_eb) {
   assert(active_eb != NULL);
   assert(dst_eb != NULL);

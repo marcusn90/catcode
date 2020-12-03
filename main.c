@@ -116,16 +116,23 @@ int main(int argc, char **argv) {
           case SDL_SCANCODE_BACKSLASH: {
             if (open_editor_buffers[1] == NULL) {
               // split screen
-              EditorBuffer new_eb = *active_eb;
-              open_editor_buffers[1] = &new_eb;
+              EditorBuffer *new_eb = calloc(1, sizeof(EditorBuffer));
+              editor_clone_buffer(active_eb, new_eb);
+              open_editor_buffers[1] = new_eb;
               open_editor_buffers[0]->view_props.width = WIN_WIDTH / 2;
+              open_editor_buffers[0]->view_props.offset_x = 0;
               open_editor_buffers[1]->view_props.width = WIN_WIDTH / 2;
               open_editor_buffers[1]->view_props.offset_x = WIN_WIDTH / 2;
               active_eb_idx = 1;
             } else {
               // back to single buffer
+              active_eb->view_props.width = WIN_WIDTH;
+              active_eb->view_props.offset_x = 0;
+              open_editor_buffers[0] = active_eb;
+              if (open_editor_buffers[1] != open_editor_buffers[0]) {
+                free(open_editor_buffers[1]);
+              }
               open_editor_buffers[1] = NULL;
-              open_editor_buffers[0]->view_props.width = WIN_WIDTH;
               active_eb_idx = 0;
             }
             should_render = 1;
@@ -158,6 +165,7 @@ int main(int argc, char **argv) {
 
       // update active buffer ref after event handlers
       active_eb = open_editor_buffers[active_eb_idx];
+      assert(active_eb != NULL);
 
       if (should_render) {
         if (open_editor_buffers[1] != NULL) {

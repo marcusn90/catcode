@@ -68,6 +68,7 @@ void editor_move_cursor_to_current_word_end(EditorBuffer *eb);
 i32 editor_move_cursor_to_next_word_start(EditorBuffer *eb);
 void editor_move_cursor_to_prev_word_start(EditorBuffer *eb);
 
+void editor_clone_buffer(EditorBuffer *src, EditorBuffer *dst);
 void editor_sync_with_active(EditorBuffer *active_eb, EditorBuffer *dst_eb);
 
 #endif
