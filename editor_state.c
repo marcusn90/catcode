@@ -364,43 +364,68 @@ void editor_move_cursor_to_line_end(EditorBuffer *eb) {
   i32 dx = 333;
 }
 
-void editor_move_cursor_to_current_word_start(EditorBuffer *eb) {}
-
-void editor_move_cursor_to_current_word_end(EditorBuffer *eb) {}
-
-i32 editor_move_cursor_to_next_word_start(EditorBuffer *eb) {
+void editor_move_cursor_to_word_start_forward(EditorBuffer *eb) {
   TextLine *line = editor_active_line(eb);
-  assert(line);
+  assert(line != NULL);
 
   i32 line_len = strlen(line->buf);
   if (line_len == 0 || eb->cursor_pos == line_len) {
     eb->cursor_pos = 0;
     editor_adjust_active_line(eb, 1);
-    return 1;
   } else {
-
     ui32 i = eb->cursor_pos + 1;
-
-    CharType curr_char_type = OTHER, prev_char_type = OTHER;
-    // skip chars of same type and whitespaces
-    // TODO: we should probably also skip '_', '-', ... inside words
+    CharType curr_char_type = OTHER;
+    CharType prev_char_type = OTHER;
     while (i < line_len) {
       curr_char_type = get_char_type(line->buf[i]);
       prev_char_type = get_char_type(line->buf[i - 1]);
-      if (curr_char_type == WHITESPACE || curr_char_type == prev_char_type) {
-        ++i;
-      } else {
+
+      if ((curr_char_type == LETTER || curr_char_type == DIGIT) &&
+          (prev_char_type == WHITESPACE || prev_char_type == SEPARATOR)) {
         break;
+      } else {
+        ++i;
       }
     }
 
     eb->cursor_pos = i;
-    return 1;
   }
-  return -1;
 }
 
-void editor_move_cursor_to_prev_word_start(EditorBuffer *eb) {}
+void editor_move_cursor_to_word_start_backward(EditorBuffer *eb) {
+  TextLine *line = editor_active_line(eb);
+  assert(line != NULL);
+  i32 line_len = strlen(line->buf);
+
+  if (eb->cursor_pos == 0) {
+    // check start of first line
+    if (line == eb->lines_head) {
+      return;
+    }
+    editor_adjust_active_line(eb, -1);
+    eb->cursor_pos = TEXT_LINE_MAX_LENGTH;
+    editor_adjust_cursor_on_active_line(eb);
+  } else {
+    ui32 i = eb->cursor_pos - 1;
+    CharType prev_char_type = OTHER;
+    CharType curr_char_type = OTHER;
+    while (i > 0) {
+      curr_char_type = get_char_type(line->buf[i]);
+      prev_char_type = get_char_type(line->buf[i - 1]);
+
+      if ((prev_char_type == WHITESPACE || prev_char_type == SEPARATOR) &&
+          (curr_char_type == LETTER || curr_char_type == DIGIT)) {
+        break;
+      } else {
+        --i;
+      }
+    }
+
+    eb->cursor_pos = i;
+  }
+}
+
+void editor_move_cursor_to_word_end_forward(EditorBuffer *eb) {}
 
 void editor_clone_buffer(EditorBuffer *src, EditorBuffer *dst) {
   assert(src != NULL);

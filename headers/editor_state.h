@@ -63,10 +63,9 @@ char editor_coords_to_cursor(EditorBuffer *eb, ui32 glyph_width,
 void editor_move_cursor_to_line_start(EditorBuffer *eb);
 void editor_move_cursor_to_line_end(EditorBuffer *eb);
 
-void editor_move_cursor_to_current_word_start(EditorBuffer *eb);
-void editor_move_cursor_to_current_word_end(EditorBuffer *eb);
-i32 editor_move_cursor_to_next_word_start(EditorBuffer *eb);
-void editor_move_cursor_to_prev_word_start(EditorBuffer *eb);
+void editor_move_cursor_to_word_start_backward(EditorBuffer *eb);
+void editor_move_cursor_to_word_start_forward(EditorBuffer *eb);
+void editor_move_cursor_to_word_end_forward(EditorBuffer *eb);
 
 void editor_clone_buffer(EditorBuffer *src, EditorBuffer *dst);
 void editor_sync_with_active(EditorBuffer *active_eb, EditorBuffer *dst_eb);

@@ -23,6 +23,32 @@ uchar is_letter(char c) {
 
 uchar is_digit(char c) { return c >= '0' && c <= '9'; }
 
+uchar is_separator(char c) {
+  switch (c) {
+  case '-':
+  case '/':
+  case '\\':
+  case '\'':
+  case '"':
+  case '.':
+  case ',':
+  case '<':
+  case '>':
+  case '#':
+  case '*':
+  case '[':
+  case ']':
+  case '=':
+  case '{':
+  case '}':
+  case '(':
+  case ')':
+    return 1;
+  default:
+    return 0;
+  }
+}
+
 CharType get_char_type(char c) {
   if (is_letter(c)) {
     return LETTER;
@@ -30,6 +56,8 @@ CharType get_char_type(char c) {
     return DIGIT;
   } else if (is_whitespace(c)) {
     return WHITESPACE;
+  } else if (is_separator(c)) {
+    return SEPARATOR;
   } else {
     return OTHER;
   }

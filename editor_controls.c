@@ -35,16 +35,28 @@ i32 editor_controls_handle_keydown(SDL_Event e, EditorBuffer *eb) {
 
   case SDL_SCANCODE_RIGHT:
     if (SDL_GetModState() & KMOD_ALT) {
-      editor_move_cursor_to_next_word_start(eb);
+      editor_move_cursor_to_word_start_forward(eb);
     } else {
       editor_move_cursor(eb, 1);
     }
     should_render = 1;
     break;
+  case SDL_SCANCODE_B:
+    if (eb->mode == EDITOR_MODE_NORMAL) {
+      editor_move_cursor_to_word_start_backward(eb);
+      should_render = 1;
+    }
+    break;
+  case SDL_SCANCODE_E:
+    if (eb->mode == EDITOR_MODE_NORMAL) {
+      editor_move_cursor_to_word_end_forward(eb);
+      should_render = 1;
+    }
+    break;
 
   case SDL_SCANCODE_W:
     if (eb->mode == EDITOR_MODE_NORMAL) {
-      editor_move_cursor_to_next_word_start(eb);
+      editor_move_cursor_to_word_start_forward(eb);
       should_render = 1;
     }
     break;
