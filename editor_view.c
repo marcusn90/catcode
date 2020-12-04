@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 
 #include "headers/editor_view.h"
+#include "headers/utils.h"
 
 ui32 editor_view_max_chars_per_line(EditorBuffer *eb) {
   return eb->view_props.width / eb->tr_props.glyph_width - 2;

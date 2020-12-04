@@ -1,10 +1,34 @@
+#include "headers/app_state.h"
 #include "headers/editor_state.h"
 #include "headers/types.h"
 #include <SDL2/SDL.h>
+#include <assert.h>
 
-i32 editor_controls_handle_keydown(SDL_Event e, EditorBuffer *eb) {
+i32 app_handle_keydown(SDL_Event e) {
   i32 should_render = 0;
+  EditorBuffer *eb = app_state_get_active_eb();
+  assert(eb);
+
   switch (e.key.keysym.scancode) {
+  case SDL_SCANCODE_BACKSLASH: {
+    if (eb->mode == EDITOR_MODE_NORMAL) {
+      app_state_toggle_split_buffers();
+      should_render = 1;
+    }
+    break;
+  case SDL_SCANCODE_1:
+    if (eb->mode == EDITOR_MODE_NORMAL) {
+      app_state_set_active_buffer_idx(0);
+      should_render = 1;
+    }
+    break;
+  case SDL_SCANCODE_2:
+    if (eb->mode == EDITOR_MODE_NORMAL) {
+      app_state_set_active_buffer_idx(1);
+      should_render = 1;
+    }
+    break;
+  }
   case SDL_SCANCODE_ESCAPE:
     editor_set_mode_normal(eb);
     SDL_StopTextInput();
@@ -101,7 +125,10 @@ i32 editor_controls_handle_keydown(SDL_Event e, EditorBuffer *eb) {
   return should_render;
 }
 
-i32 editor_controls_handle_mousewheel(SDL_Event e, EditorBuffer *eb) {
+i32 app_handle_mousewheel(SDL_Event e) {
+  EditorBuffer *eb = app_state_get_active_eb();
+  assert(eb);
+
   i32 should_render = 0;
   if (e.wheel.y > 0) {
     if (editor_scroll_n_lines(eb, -1) != -1) {
@@ -115,12 +142,11 @@ i32 editor_controls_handle_mousewheel(SDL_Event e, EditorBuffer *eb) {
   return should_render;
 }
 
-i32 editor_controls_handle_mouse_button_down(SDL_Event e, EditorBuffer *eb) {
+i32 app_handle_mouse_button_down(SDL_Event e) {
   i32 should_render = 0;
+  EditorBuffer *eb = app_state_get_active_eb();
+  assert(eb);
   if (e.button.button == SDL_BUTTON_LEFT) {
-    // TODO: editor should probably know about its text renderer and its
-    // offsets make TR_props and main_text_offset_x/y part of
-    // EditorBuffer struct
     if (editor_coords_to_cursor(eb, eb->tr_props.glyph_width,
                                 eb->tr_props.line_height,
                                 e.button.x - eb->main_text_offset_x,
