@@ -117,7 +117,7 @@ i32 app_handle_keydown(SDL_Event e) {
     break;
 
   case SDL_SCANCODE_TAB:
-    editor_insert_str_at_cursor(eb, "    ");
+    editor_insert_str_at_cursor(eb, "  ");
     should_render = 1;
     break;
   } // switch
