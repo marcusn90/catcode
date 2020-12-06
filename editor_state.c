@@ -425,7 +425,34 @@ void editor_move_cursor_to_word_start_backward(EditorBuffer *eb) {
   }
 }
 
-void editor_move_cursor_to_word_end_forward(EditorBuffer *eb) {}
+void editor_move_cursor_to_word_end_forward(EditorBuffer *eb) {
+  TextLine *line = editor_active_line(eb);
+  assert(line != NULL);
+  i32 line_len = strlen(line->buf);
+  assert(eb->cursor_pos <= line_len);
+  if (eb->cursor_pos == line_len) {
+    if (line->next == NULL) {
+      return; // end of last line
+    }
+    eb->cursor_pos = 0;
+    editor_adjust_active_line(eb, 1);
+  } else {
+    i32 i = eb->cursor_pos + 1;
+    CharType next_char_type = OTHER;
+    CharType curr_char_type = OTHER;
+    while (i < line_len - 1) {
+      curr_char_type = get_char_type(line->buf[i]);
+      next_char_type = get_char_type(line->buf[i + 1]);
+      if ((next_char_type == WHITESPACE || next_char_type == SEPARATOR) &&
+          (curr_char_type == LETTER || curr_char_type == DIGIT)) {
+        break;
+      } else {
+        ++i;
+      }
+    }
+    eb->cursor_pos = i;
+  }
+}
 
 void editor_clone_buffer(EditorBuffer *src, EditorBuffer *dst) {
   assert(src != NULL);
