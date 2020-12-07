@@ -20,13 +20,13 @@
 - `C` - switch to INSERT MODE and delete line part after cursor
 - `s` - switch to INSERT MODE and delete char at cursor
 - `S` - switch to INSERT MODE and delete line from the first non-whitespace character
-
-### TODO for NORMAL MODE
-
 - `o` - switch to INSERT MODE and create new empty line below current
 - `O` - switch to INSERT MODE and create new empty line above current
 - `x` - remove character at cursor
 - `h`, `j`, `k`, `l` - cursor movement
+
+### TODO for NORMAL MODE
+
 - `dd` - delete line under cursor
 - `D` - delete from cursor till the end of the line
 - `B` - delete from cursor till the start of the line

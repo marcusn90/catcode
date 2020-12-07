@@ -92,9 +92,29 @@ i32 app_handle_keydown(SDL_Event e) {
       should_render = 1;
     }
     break;
+  case SDL_SCANCODE_X:
+    if (eb->mode == EDITOR_MODE_NORMAL) {
+      editor_remove_char_at_cursor(eb);
+      should_render = 1;
+    }
+    break;
+
+  case SDL_SCANCODE_K:
+    if (eb->mode == EDITOR_MODE_NORMAL &&
+        editor_adjust_active_line(eb, -1) != -1) {
+      should_render = 1;
+    }
+    break;
 
   case SDL_SCANCODE_UP:
     if (editor_adjust_active_line(eb, -1) != -1) {
+      should_render = 1;
+    }
+    break;
+
+  case SDL_SCANCODE_J:
+    if (eb->mode == EDITOR_MODE_NORMAL &&
+        editor_adjust_active_line(eb, 1) != -1) {
       should_render = 1;
     }
     break;
@@ -105,16 +125,37 @@ i32 app_handle_keydown(SDL_Event e) {
     }
     break;
 
-  case SDL_SCANCODE_RIGHT:
-    editor_move_cursor(eb, 1);
-    should_render = 1;
+  case SDL_SCANCODE_L:
+    if (eb->mode == EDITOR_MODE_NORMAL && editor_move_cursor(eb, 1)) {
+      should_render = 1;
+    }
     break;
+
+  case SDL_SCANCODE_RIGHT:
+    if (editor_move_cursor(eb, 1) != -1) {
+      should_render = 1;
+    }
+    break;
+
+  case SDL_SCANCODE_H:
+    if (eb->mode == EDITOR_MODE_NORMAL && editor_move_cursor(eb, -1) != -1) {
+      should_render = 1;
+    }
+    break;
+
+  case SDL_SCANCODE_LEFT:
+    if (editor_move_cursor(eb, -1) != -1) {
+      should_render = 1;
+    }
+    break;
+
   case SDL_SCANCODE_B:
     if (eb->mode == EDITOR_MODE_NORMAL) {
       editor_move_cursor_to_word_start_backward(eb);
       should_render = 1;
     }
     break;
+
   case SDL_SCANCODE_E:
     if (eb->mode == EDITOR_MODE_NORMAL) {
       editor_move_cursor_to_word_end_forward(eb);
@@ -125,12 +166,6 @@ i32 app_handle_keydown(SDL_Event e) {
   case SDL_SCANCODE_W:
     if (eb->mode == EDITOR_MODE_NORMAL) {
       editor_move_cursor_to_word_start_forward(eb);
-      should_render = 1;
-    }
-    break;
-
-  case SDL_SCANCODE_LEFT:
-    if (editor_move_cursor(eb, -1) != -1) {
       should_render = 1;
     }
     break;
