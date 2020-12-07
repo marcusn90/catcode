@@ -38,13 +38,25 @@ i32 app_handle_keydown(SDL_Event e) {
   case SDL_SCANCODE_I:
     if (eb->mode == EDITOR_MODE_NORMAL) {
       if (SDL_GetModState() & KMOD_SHIFT) {
-        eb->cursor_pos = 0; // start editing from line start
+        editor_move_cursor_to_line_start(eb); // start editing from line start
       }
       SDL_StartTextInput();
       editor_set_mode_insert(eb);
       should_render = 1;
     }
+    break;
   case SDL_SCANCODE_A:
+    if (eb->mode == EDITOR_MODE_NORMAL) {
+      if (SDL_GetModState() & KMOD_SHIFT) {
+        editor_move_cursor_to_line_end(eb); // start editing from line end
+      } else {
+        editor_move_cursor(eb, 1);
+      }
+      SDL_StartTextInput();
+      editor_set_mode_insert(eb);
+      should_render = 1;
+    }
+    break;
   case SDL_SCANCODE_C:
     if (eb->mode == EDITOR_MODE_NORMAL) {
       SDL_StartTextInput();

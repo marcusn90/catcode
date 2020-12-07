@@ -17,11 +17,11 @@
 - `(opt + <-)` - jump to word start, jump to prev word start
 - `e` - jump to word end, jump to next word end
 - `I` - switch to INSERT MODE and start edit at line start
+- `a` - switch to INSERT MODE and start edit after cursor
+- `A` - switch to INSERT MODE and start edit at line end
 
 ### TODO for NORMAL MODE
 
-- `a` - switch to INSERT MODE and start edit after cursor
-- `A` - switch to INSERT MODE and start edit at line end
 - `C` - switch to INSERT MODE and delete line part after cursor
 - `S` - switch to INSERT MODE and delete line from the first non-whitespace character
 - `o` - switch to INSERT MODE and create new empty line below current
