@@ -501,3 +501,36 @@ void editor_sync_with_active(EditorBuffer *active_eb, EditorBuffer *dst_eb) {
     editor_adjust_cursor_on_active_line(dst_eb);
   }
 }
+
+void editor_insert_line_above_cursor(EditorBuffer *eb) {
+  TextLine *line = editor_active_line(eb);
+  assert(line);
+
+  TextLine *new_line = calloc(1, sizeof(TextLine));
+  assert(new_line != NULL);
+
+  if (line == eb->lines_head) {
+    new_line->next = eb->lines_head;
+    eb->lines_head = new_line;
+  } else {
+    TextLine *prev_line = editor_nth_line(eb, eb->active_line_idx - 2);
+    assert(prev_line != NULL);
+    prev_line->next = new_line;
+    new_line->next = line;
+  }
+  ++(eb->total_lines_num);
+  editor_adjust_cursor_on_active_line(eb);
+}
+void editor_insert_line_below_cursor(EditorBuffer *eb) {
+  TextLine *line = editor_active_line(eb);
+  assert(line);
+
+  TextLine *new_line = calloc(1, sizeof(TextLine));
+  assert(new_line != NULL);
+
+  new_line->next = line->next;
+  line->next = new_line;
+  ++(eb->total_lines_num);
+  editor_adjust_active_line(eb, 1);
+  editor_adjust_cursor_on_active_line(eb);
+}

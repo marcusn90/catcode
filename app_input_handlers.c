@@ -80,6 +80,18 @@ i32 app_handle_keydown(SDL_Event e) {
       should_render = 1;
     }
     break;
+  case SDL_SCANCODE_O:
+    if (eb->mode == EDITOR_MODE_NORMAL) {
+      if (SDL_GetModState() & KMOD_SHIFT) {
+        editor_insert_line_above_cursor(eb);
+      } else {
+        editor_insert_line_below_cursor(eb);
+      }
+      SDL_StartTextInput();
+      editor_set_mode_insert(eb);
+      should_render = 1;
+    }
+    break;
 
   case SDL_SCANCODE_UP:
     if (editor_adjust_active_line(eb, -1) != -1) {

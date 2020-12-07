@@ -70,5 +70,7 @@ void editor_move_cursor_to_word_end_forward(EditorBuffer *eb);
 
 void editor_clone_buffer(EditorBuffer *src, EditorBuffer *dst);
 void editor_sync_with_active(EditorBuffer *active_eb, EditorBuffer *dst_eb);
+void editor_insert_line_above_cursor(EditorBuffer *eb);
+void editor_insert_line_below_cursor(EditorBuffer *eb);
 
 #endif
