@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include <assert.h>
 
+extern AppState GAS;
 i32 app_handle_keydown(SDL_Event e) {
   i32 should_render = 0;
   EditorBuffer *eb = app_state_get_active_eb();
@@ -146,6 +147,15 @@ i32 app_handle_keydown(SDL_Event e) {
   case SDL_SCANCODE_LEFT:
     if (editor_move_cursor(eb, -1) != -1) {
       should_render = 1;
+    }
+    break;
+
+  case SDL_SCANCODE_Y:
+    if (eb->mode == EDITOR_MODE_NORMAL) {
+      if (SDL_GetModState() & KMOD_SHIFT) {
+        editor_copy_active_line_to_clipboard(eb);
+      }
+      printf("Copied: '%s'\n", Clipboard.text);
     }
     break;
 

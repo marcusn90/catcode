@@ -62,3 +62,8 @@ CharType get_char_type(char c) {
     return OTHER;
   }
 }
+
+void str_copy(char *dst, const char *src, int size) {
+  // TODO: replace strncpy
+  strncpy(dst, src, size);
+}

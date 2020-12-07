@@ -13,6 +13,7 @@
 #include "headers/utils.h"
 
 #include "headers/app_state.h"
+#include "headers/clipboard.h"
 
 #define DEFAULT_FONT_PATH "fonts/Inconsolata-Regular.ttf"
 
@@ -45,6 +46,7 @@ int main(int argc, char **argv) {
   }
 
   app_state_init();
+  clipboard_init();
 
   // TODO: read fontpath from argv or select inside the editor
   TextRenderProps tr_props = {.glyph_width = 0,

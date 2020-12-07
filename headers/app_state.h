@@ -1,6 +1,7 @@
 #ifndef APP_STATE_H
 #define APP_STATE_H
 
+#include "clipboard.h"
 #include "editor_state.h"
 
 #define WIN_WIDTH 800

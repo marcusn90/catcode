@@ -73,4 +73,5 @@ void editor_sync_with_active(EditorBuffer *active_eb, EditorBuffer *dst_eb);
 void editor_insert_line_above_cursor(EditorBuffer *eb);
 void editor_insert_line_below_cursor(EditorBuffer *eb);
 
+void editor_copy_active_line_to_clipboard(EditorBuffer *eb);
 #endif

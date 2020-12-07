@@ -9,5 +9,6 @@ uchar is_letter(char c);
 uchar is_digit(char c);
 uchar is_separator(char c);
 CharType get_char_type(char c);
+void str_copy(char *dst, const char *src, int size);
 
 #endif

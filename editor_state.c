@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "headers/clipboard.h"
 #include "headers/editor_state.h"
+#include "headers/text.h"
 #include "headers/utils.h"
 
 i32 editor_init_from_file(EditorBuffer *eb, char **file_path) {
@@ -23,7 +25,7 @@ i32 editor_init_from_file(EditorBuffer *eb, char **file_path) {
   while ((c = fgetc(f)) != EOF) {
     if (c == '\n') {
       lines_num++;
-      strncpy(last_line->buf, str, len);
+      str_copy(last_line->buf, str, len);
       len = 0;
       memset(str, 0, TEXT_LINE_MAX_LENGTH);
       TextLine *new_line = calloc(1, sizeof(TextLine));
@@ -39,7 +41,7 @@ i32 editor_init_from_file(EditorBuffer *eb, char **file_path) {
 
   // check for last line without \n
   if (len) {
-    strncpy(last_line->buf, str, len);
+    str_copy(last_line->buf, str, len);
     TextLine *new_line = calloc(1, sizeof(TextLine));
     new_line->next = NULL;
     last_line->next = new_line;
@@ -171,7 +173,7 @@ void editor_line_chunk_before_cursor(EditorBuffer *eb, char *dst) {
   i32 len = strlen(line->buf);
   assert(eb->cursor_pos <= len);
 
-  strncpy(dst, line->buf, eb->cursor_pos);
+  str_copy(dst, line->buf, eb->cursor_pos);
 }
 
 void editor_line_chunk_after_cursor(EditorBuffer *eb, char *dst) {
@@ -179,7 +181,7 @@ void editor_line_chunk_after_cursor(EditorBuffer *eb, char *dst) {
   i32 len = strlen(line->buf);
   assert(eb->cursor_pos < len);
 
-  strncpy(dst, line->buf + eb->cursor_pos, len - eb->cursor_pos);
+  str_copy(dst, line->buf + eb->cursor_pos, len - eb->cursor_pos);
 }
 
 void editor_remove_line_chunk_after_cursor(EditorBuffer *eb) {
@@ -231,7 +233,7 @@ void editor_remove_char_before_cursor(EditorBuffer *eb) {
     editor_line_chunk_before_cursor(eb, before);
     TextLine *line = editor_active_line(eb);
     editor_clear_line(line);
-    strncpy(line->buf, before, TEXT_LINE_MAX_LENGTH);
+    str_copy(line->buf, before, TEXT_LINE_MAX_LENGTH);
     strcat(line->buf, after);
   }
 }
@@ -276,7 +278,7 @@ void editor_remove_char_at_cursor(EditorBuffer *eb) {
     printf("After to copy: '%s'\n", (char *)(after + 1));
     printf("len before: %d\n", line_len);
     editor_clear_line(line);
-    strncpy(line->buf, before, TEXT_LINE_MAX_LENGTH);
+    str_copy(line->buf, before, TEXT_LINE_MAX_LENGTH);
     if ((i32)strlen(after) > 1) {
       strcat(line->buf, (char *)(after + 1));
     }
@@ -306,7 +308,7 @@ TextLine *editor_add_new_line_at_cursor(EditorBuffer *eb) {
       editor_line_chunk_before_cursor(eb, curr_line_text);
       editor_line_chunk_after_cursor(eb, new_line->buf);
       editor_clear_line(line);
-      strncpy(line->buf, curr_line_text, TEXT_LINE_MAX_LENGTH);
+      str_copy(line->buf, curr_line_text, TEXT_LINE_MAX_LENGTH);
     }
   }
   ++(eb->total_lines_num);
@@ -472,7 +474,7 @@ void editor_move_cursor_to_word_end_forward(EditorBuffer *eb) {
 void editor_clone_buffer(EditorBuffer *src, EditorBuffer *dst) {
   assert(src != NULL);
   assert(dst != NULL);
-  strncpy(dst->assoc_file, src->assoc_file, 1024);
+  str_copy(dst->assoc_file, src->assoc_file, 1024);
   dst->mode = src->mode;
   dst->view_props = src->view_props;
   dst->tr_props = src->tr_props;
@@ -533,4 +535,14 @@ void editor_insert_line_below_cursor(EditorBuffer *eb) {
   ++(eb->total_lines_num);
   editor_adjust_active_line(eb, 1);
   editor_adjust_cursor_on_active_line(eb);
+}
+
+void editor_copy_active_line_to_clipboard(EditorBuffer *eb) {
+  TextLine *line = editor_active_line(eb);
+  assert(line != NULL);
+  char str[TEXT_LINE_MAX_LENGTH] = {0};
+  char ch_new_line = '\n';
+  strcat(str, line->buf);
+  strcat(str, &ch_new_line);
+  clipboard_write_str(str);
 }

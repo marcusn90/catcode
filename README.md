@@ -24,12 +24,13 @@
 - `O` - switch to INSERT MODE and create new empty line above current
 - `x` - remove character at cursor
 - `h`, `j`, `k`, `l` - cursor movement
+- `Y` - copy line
 
 ### TODO for NORMAL MODE
 
-- `dd` - delete line under cursor
-- `D` - delete from cursor till the end of the line
-- `B` - delete from cursor till the start of the line
+- `dd` - cut line under cursor
+- `D` - cut from cursor till the end of the line
+- `B` - cut from cursor till the start of the line
 - `yy` - copy line
 - `p` - paste at cursor or to the next line if line was copied
 - `P` - paste before cursor or to the prev line if line was copied

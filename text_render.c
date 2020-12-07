@@ -76,7 +76,7 @@ void text_renderer_draw_line(SDL_Renderer *renderer, ui32 max_chars_per_line,
   if (max_chars_per_line > TEXT_LINE_MAX_LENGTH) {
     max_chars_per_line = TEXT_LINE_MAX_LENGTH;
   }
-  strncpy(str, line->buf, max_chars_per_line);
+  str_copy(str, line->buf, max_chars_per_line);
   text_renderer_draw_string(renderer, tr_props, str, x, y, color);
 }
 
