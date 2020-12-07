@@ -182,6 +182,21 @@ void editor_line_chunk_after_cursor(EditorBuffer *eb, char *dst) {
   strncpy(dst, line->buf + eb->cursor_pos, len - eb->cursor_pos);
 }
 
+void editor_remove_line_chunk_after_cursor(EditorBuffer *eb) {
+  TextLine *line = editor_active_line(eb);
+  assert(line);
+  i32 line_len = strlen(line->buf);
+  char new_buf[TEXT_LINE_MAX_LENGTH] = {0};
+  if (eb->cursor_pos == line_len) {
+    return;
+  }
+  // ++(eb->cursor_pos);
+  editor_line_chunk_before_cursor(eb, new_buf);
+  editor_clear_line(line);
+  memcpy(line->buf, new_buf, TEXT_LINE_MAX_LENGTH);
+  editor_adjust_cursor_on_active_line(eb);
+}
+
 void editor_clear_line(TextLine *line) {
   assert(line);
   assert(line->buf);

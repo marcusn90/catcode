@@ -59,9 +59,12 @@ i32 app_handle_keydown(SDL_Event e) {
     break;
   case SDL_SCANCODE_C:
     if (eb->mode == EDITOR_MODE_NORMAL) {
-      SDL_StartTextInput();
-      editor_set_mode_insert(eb);
-      should_render = 1;
+      if (SDL_GetModState() & KMOD_SHIFT) {
+        editor_remove_line_chunk_after_cursor(eb);
+        SDL_StartTextInput();
+        editor_set_mode_insert(eb);
+        should_render = 1;
+      }
     }
     break;
 

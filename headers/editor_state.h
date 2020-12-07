@@ -52,6 +52,7 @@ void editor_clear_line(TextLine *line);
 
 void editor_line_chunk_before_cursor(EditorBuffer *eb, char *dst);
 void editor_line_chunk_after_cursor(EditorBuffer *eb, char *dst);
+void editor_remove_line_chunk_after_cursor(EditorBuffer *eb);
 
 void editor_remove_char_before_cursor(EditorBuffer *eb);
 void editor_remove_char_at_cursor(EditorBuffer *eb);
