@@ -36,6 +36,14 @@ i32 app_handle_keydown(SDL_Event e) {
     break;
 
   case SDL_SCANCODE_I:
+    if (eb->mode == EDITOR_MODE_NORMAL) {
+      if (SDL_GetModState() & KMOD_SHIFT) {
+        eb->cursor_pos = 0; // start editing from line start
+      }
+      SDL_StartTextInput();
+      editor_set_mode_insert(eb);
+      should_render = 1;
+    }
   case SDL_SCANCODE_A:
   case SDL_SCANCODE_C:
     if (eb->mode == EDITOR_MODE_NORMAL) {
