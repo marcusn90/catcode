@@ -67,6 +67,19 @@ i32 app_handle_keydown(SDL_Event e) {
       }
     }
     break;
+  case SDL_SCANCODE_S:
+    if (eb->mode == EDITOR_MODE_NORMAL) {
+      if (SDL_GetModState() & KMOD_SHIFT) {
+        editor_clear_line(editor_active_line(eb));
+        editor_adjust_cursor_on_active_line(eb);
+      } else {
+        editor_remove_char_at_cursor(eb);
+      }
+      SDL_StartTextInput();
+      editor_set_mode_insert(eb);
+      should_render = 1;
+    }
+    break;
 
   case SDL_SCANCODE_UP:
     if (editor_adjust_active_line(eb, -1) != -1) {

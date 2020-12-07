@@ -18,10 +18,11 @@
 - `a` - switch to INSERT MODE and start edit after cursor
 - `A` - switch to INSERT MODE and start edit at line end
 - `C` - switch to INSERT MODE and delete line part after cursor
+- `s` - switch to INSERT MODE and delete char at cursor
+- `S` - switch to INSERT MODE and delete line from the first non-whitespace character
 
 ### TODO for NORMAL MODE
 
-- `S` - switch to INSERT MODE and delete line from the first non-whitespace character
 - `o` - switch to INSERT MODE and create new empty line below current
 - `O` - switch to INSERT MODE and create new empty line above current
 - `x` - remove character at cursor
