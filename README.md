@@ -13,8 +13,6 @@
 - `\` - toggle split screen
 - `1` - make buffer 1 active
 - `2` - make buffer 2 active
-- `(opt + ->)` - jump to next word start
-- `(opt + <-)` - jump to word start, jump to prev word start
 - `e` - jump to word end, jump to next word end
 - `I` - switch to INSERT MODE and start edit at line start
 - `a` - switch to INSERT MODE and start edit after cursor

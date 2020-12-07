@@ -81,11 +81,7 @@ i32 app_handle_keydown(SDL_Event e) {
     break;
 
   case SDL_SCANCODE_RIGHT:
-    if (SDL_GetModState() & KMOD_ALT) {
-      editor_move_cursor_to_word_start_forward(eb);
-    } else {
-      editor_move_cursor(eb, 1);
-    }
+    editor_move_cursor(eb, 1);
     should_render = 1;
     break;
   case SDL_SCANCODE_B:
