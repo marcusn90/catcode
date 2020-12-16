@@ -546,3 +546,19 @@ void editor_copy_active_line_to_clipboard(EditorBuffer *eb) {
   strcat(str, &ch_new_line);
   clipboard_write_str(str);
 }
+
+void editor_paste_line_before_active(EditorBuffer *eb) {
+  editor_insert_line_above_cursor(eb);
+  TextLine *line = editor_active_line(eb);
+  assert(line != NULL);
+  editor_clear_line(line);
+  str_copy(line->buf, Clipboard.text, TEXT_LINE_MAX_LENGTH);
+}
+
+void editor_paste_line_after_active(EditorBuffer *eb) {
+  editor_insert_line_below_cursor(eb);
+  TextLine *line = editor_active_line(eb);
+  assert(line != NULL);
+  editor_clear_line(line);
+  str_copy(line->buf, Clipboard.text, TEXT_LINE_MAX_LENGTH);
+}

@@ -25,6 +25,8 @@
 - `x` - remove character at cursor
 - `h`, `j`, `k`, `l` - cursor movement
 - `Y` - copy line
+- `p` - paste line after active line
+- `P` - paste line before active line
 
 ### TODO for NORMAL MODE
 
@@ -32,8 +34,8 @@
 - `D` - cut from cursor till the end of the line
 - `B` - cut from cursor till the start of the line
 - `yy` - copy line
-- `p` - paste at cursor or to the next line if line was copied
-- `P` - paste before cursor or to the prev line if line was copied
+- `p` - paste at cursor
+- `P` - paste before cursor
 
 ## TODO
 
