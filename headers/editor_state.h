@@ -73,7 +73,10 @@ void editor_sync_with_active(EditorBuffer *active_eb, EditorBuffer *dst_eb);
 void editor_insert_line_above_cursor(EditorBuffer *eb);
 void editor_insert_line_below_cursor(EditorBuffer *eb);
 
-void editor_copy_active_line_to_clipboard(EditorBuffer *eb);
+void editor_copy_active_line(EditorBuffer *eb);
 void editor_paste_line_before_active(EditorBuffer *eb);
 void editor_paste_line_after_active(EditorBuffer *eb);
+void editor_remove_line_or_active(EditorBuffer *eb, TextLine *line_to_remove);
+void editor_cut_active_line(EditorBuffer *eb);
+void editor_cut_line_after_cursor(EditorBuffer *eb);
 #endif

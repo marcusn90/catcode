@@ -537,7 +537,7 @@ void editor_insert_line_below_cursor(EditorBuffer *eb) {
   editor_adjust_cursor_on_active_line(eb);
 }
 
-void editor_copy_active_line_to_clipboard(EditorBuffer *eb) {
+void editor_copy_active_line(EditorBuffer *eb) {
   TextLine *line = editor_active_line(eb);
   assert(line != NULL);
   char str[TEXT_LINE_MAX_LENGTH] = {0};
@@ -561,4 +561,43 @@ void editor_paste_line_after_active(EditorBuffer *eb) {
   assert(line != NULL);
   editor_clear_line(line);
   str_copy(line->buf, Clipboard.text, TEXT_LINE_MAX_LENGTH);
+}
+
+void editor_remove_line_or_active(EditorBuffer *eb, TextLine *line_to_remove) {
+  TextLine *line =
+      line_to_remove != NULL ? line_to_remove : editor_active_line(eb);
+  assert(line != NULL);
+
+  if (line == eb->lines_head) {
+    eb->lines_head->next = line->next;
+  } else {
+    TextLine *prev = editor_nth_line(eb, eb->active_line_idx - 2);
+    assert(prev);
+    prev->next = line->next;
+  }
+  free(line);
+  line = NULL;
+}
+
+void editor_cut_active_line(EditorBuffer *eb) {
+  editor_copy_active_line(eb);
+  editor_remove_line_or_active(eb, NULL);
+}
+
+void editor_cut_line_after_cursor(EditorBuffer *eb) {
+  TextLine *line = editor_active_line(eb);
+  assert(line);
+
+  i32 line_len = strlen(line->buf);
+  if (eb->cursor_pos == line_len) {
+    return;
+  }
+  char txt_before[TEXT_LINE_MAX_LENGTH] = {0};
+  char txt_after[TEXT_LINE_MAX_LENGTH] = {0};
+  editor_line_chunk_before_cursor(eb, txt_before);
+  editor_line_chunk_after_cursor(eb, txt_after);
+  editor_clear_line(line);
+  memcpy(line->buf, txt_before, TEXT_LINE_MAX_LENGTH);
+  clipboard_write_str(txt_after);
+  editor_adjust_cursor_on_active_line(eb);
 }

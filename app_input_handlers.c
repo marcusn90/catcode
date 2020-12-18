@@ -165,13 +165,31 @@ i32 app_handle_keydown(SDL_Event e) {
     }
     break;
 
+  case SDL_SCANCODE_D:
+    if (eb->mode == EDITOR_MODE_NORMAL) {
+      if (SDL_GetModState() & KMOD_SHIFT) {
+        editor_cut_line_after_cursor(eb);
+      } else {
+        if (last_key_down.c == 'd' && tick - last_key_down.tick < 200) {
+          editor_cut_active_line(eb);
+          reset_last_keydown();
+        }
+      }
+      printf("Cut: '%s'\n", Clipboard.text);
+    }
+
+    update_last_keydown('d');
+    should_render = 1;
+
+    break;
+
   case SDL_SCANCODE_Y:
     if (eb->mode == EDITOR_MODE_NORMAL) {
       if (SDL_GetModState() & KMOD_SHIFT) {
-        editor_copy_active_line_to_clipboard(eb);
+        editor_copy_active_line(eb);
       } else {
         if (last_key_down.c == 'y' && tick - last_key_down.tick < 200) {
-          editor_copy_active_line_to_clipboard(eb);
+          editor_copy_active_line(eb);
           reset_last_keydown();
         }
       }
