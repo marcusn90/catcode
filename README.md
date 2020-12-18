@@ -34,9 +34,10 @@
 
 ### TODO for NORMAL MODE
 
-- `p` - paste at cursor
-- `P` - paste before cursor
+- `cmd + p` - paste at cursor
 - `zz` - scroll editor buffer so that active line is in the middle
+- `v` - visual selection
+- cut/copy & paste selection (extend `d`/`y` & `p`)
 
 ## TODO
 
