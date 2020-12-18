@@ -1,3 +1,4 @@
+#include "headers/app_input_handlers.h"
 #include "headers/app_state.h"
 #include "headers/editor_state.h"
 #include "headers/types.h"
@@ -5,13 +6,28 @@
 #include <assert.h>
 
 extern AppState GAS;
+
+struct LastKeyDown {
+  ui32 tick;
+  char c
+} last_key_down = {0, 0};
+
+static update_last_keydown(char c) {
+  last_key_down.c = c;
+  last_key_down.tick = SDL_GetTicks();
+}
+
+static reset_last_keydown() { last_key_down.c = 0; }
+
 i32 app_handle_keydown(SDL_Event e) {
   i32 should_render = 0;
+  ui32 tick = SDL_GetTicks();
+
   EditorBuffer *eb = app_state_get_active_eb();
   assert(eb);
 
   switch (e.key.keysym.scancode) {
-  case SDL_SCANCODE_BACKSLASH: {
+  case SDL_SCANCODE_BACKSLASH:
     if (eb->mode == EDITOR_MODE_NORMAL) {
       app_state_toggle_split_buffers();
       should_render = 1;
@@ -29,7 +45,6 @@ i32 app_handle_keydown(SDL_Event e) {
       should_render = 1;
     }
     break;
-  }
   case SDL_SCANCODE_ESCAPE:
     editor_set_mode_normal(eb);
     SDL_StopTextInput();
@@ -154,9 +169,17 @@ i32 app_handle_keydown(SDL_Event e) {
     if (eb->mode == EDITOR_MODE_NORMAL) {
       if (SDL_GetModState() & KMOD_SHIFT) {
         editor_copy_active_line_to_clipboard(eb);
+      } else {
+        if (last_key_down.c == 'y' && tick - last_key_down.tick < 200) {
+          editor_copy_active_line_to_clipboard(eb);
+          reset_last_keydown();
+        }
       }
       printf("Copied: '%s'\n", Clipboard.text);
     }
+
+    update_last_keydown('y');
+
     break;
 
   case SDL_SCANCODE_P:
