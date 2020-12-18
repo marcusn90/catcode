@@ -30,10 +30,10 @@
 - `P` - paste line before active line
 - `dd` - cut active line or selection
 - `D` - cut from cursor till the end of the line
+- `B` - cut from cursor till the start of the line
 
 ### TODO for NORMAL MODE
 
-- `B` - cut from cursor till the start of the line
 - `p` - paste at cursor
 - `P` - paste before cursor
 - `zz` - scroll editor buffer so that active line is in the middle

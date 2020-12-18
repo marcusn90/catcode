@@ -213,7 +213,11 @@ i32 app_handle_keydown(SDL_Event e) {
 
   case SDL_SCANCODE_B:
     if (eb->mode == EDITOR_MODE_NORMAL) {
-      editor_move_cursor_to_word_start_backward(eb);
+      if (SDL_GetModState() & KMOD_SHIFT) {
+        editor_cut_line_before_cursor(eb);
+      } else {
+        editor_move_cursor_to_word_start_backward(eb);
+      }
       should_render = 1;
     }
     break;

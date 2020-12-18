@@ -601,3 +601,22 @@ void editor_cut_line_after_cursor(EditorBuffer *eb) {
   clipboard_write_str(txt_after);
   editor_adjust_cursor_on_active_line(eb);
 }
+
+void editor_cut_line_before_cursor(EditorBuffer *eb) {
+  TextLine *line = editor_active_line(eb);
+  assert(line);
+
+  i32 line_len = strlen(line->buf);
+  if (eb->cursor_pos == line_len) {
+    return;
+  }
+  char txt_before[TEXT_LINE_MAX_LENGTH] = {0};
+  char txt_after[TEXT_LINE_MAX_LENGTH] = {0};
+  editor_line_chunk_before_cursor(eb, txt_before);
+  editor_line_chunk_after_cursor(eb, txt_after);
+  editor_clear_line(line);
+  memcpy(line->buf, txt_after, TEXT_LINE_MAX_LENGTH);
+  clipboard_write_str(txt_before);
+  eb->cursor_pos = 0;
+  editor_adjust_cursor_on_active_line(eb);
+}
