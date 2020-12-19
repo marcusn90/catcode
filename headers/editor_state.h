@@ -80,4 +80,5 @@ void editor_remove_line_or_active(EditorBuffer *eb, TextLine *line_to_remove);
 void editor_cut_active_line(EditorBuffer *eb);
 void editor_cut_line_after_cursor(EditorBuffer *eb);
 void editor_cut_line_before_cursor(EditorBuffer *eb);
+void editor_paste_at_cursor(EditorBuffer *eb);
 #endif

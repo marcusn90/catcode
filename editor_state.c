@@ -541,9 +541,9 @@ void editor_copy_active_line(EditorBuffer *eb) {
   TextLine *line = editor_active_line(eb);
   assert(line != NULL);
   char str[TEXT_LINE_MAX_LENGTH] = {0};
-  char ch_new_line = '\n';
+  // char ch_new_line = '\n';
   strcat(str, line->buf);
-  strcat(str, &ch_new_line);
+  // strcat(str, &ch_new_line);
   clipboard_write_str(str);
 }
 
@@ -618,5 +618,12 @@ void editor_cut_line_before_cursor(EditorBuffer *eb) {
   memcpy(line->buf, txt_after, TEXT_LINE_MAX_LENGTH);
   clipboard_write_str(txt_before);
   eb->cursor_pos = 0;
+  editor_adjust_cursor_on_active_line(eb);
+}
+
+void editor_paste_at_cursor(EditorBuffer *eb) {
+  puts("Paste at cursor");
+  editor_insert_str_at_cursor(eb, Clipboard.text);
+
   editor_adjust_cursor_on_active_line(eb);
 }

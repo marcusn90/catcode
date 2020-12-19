@@ -204,11 +204,14 @@ i32 app_handle_keydown(SDL_Event e) {
     if (eb->mode == EDITOR_MODE_NORMAL) {
       if (SDL_GetModState() & KMOD_SHIFT) {
         editor_paste_line_before_active(eb);
-      } else {
+      } else if (!(SDL_GetModState() & KMOD_CTRL)) {
         editor_paste_line_after_active(eb);
       }
-      should_render = 1;
     }
+    if (SDL_GetModState() & KMOD_CTRL) {
+      editor_paste_at_cursor(eb);
+    }
+    should_render = 1;
     break;
 
   case SDL_SCANCODE_B:
