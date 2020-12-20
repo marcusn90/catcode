@@ -268,6 +268,20 @@ i32 app_handle_keydown(SDL_Event e) {
     editor_insert_str_at_cursor(eb, "  ");
     should_render = 1;
     break;
+
+  case SDL_SCANCODE_Z:
+    if (eb->mode == EDITOR_MODE_NORMAL) {
+      if (last_key_down.c == 'z' && tick - last_key_down.tick < 200) {
+        reset_last_keydown();
+        should_render = editor_scroll_active_line_to_middle(eb) == -1 ? 0 : 1;
+      }
+      printf("Copied: '%s'\n", Clipboard.text);
+    }
+
+    update_last_keydown('z');
+
+    break;
+
   } // switch
 
   return should_render;

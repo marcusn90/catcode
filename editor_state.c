@@ -627,3 +627,9 @@ void editor_paste_at_cursor(EditorBuffer *eb) {
 
   editor_adjust_cursor_on_active_line(eb);
 }
+
+char editor_scroll_active_line_to_middle(EditorBuffer *eb) {
+  int middle = eb->max_visible_lines / 2;
+  return editor_scroll_n_lines(eb, eb->active_line_idx -
+                                       eb->first_visible_line_idx - middle);
+}

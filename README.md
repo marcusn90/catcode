@@ -31,11 +31,11 @@
 - `dd` - cut active line or selection
 - `D` - cut from cursor till the end of the line
 - `B` - cut from cursor till the start of the line
+- `cmd + p` - paste at cursor
+- `zz` - scroll editor buffer so that active line is in the middle
 
 ### TODO for NORMAL MODE
 
-- `cmd + p` - paste at cursor
-- `zz` - scroll editor buffer so that active line is in the middle
 - `v` - visual selection
 - cut/copy & paste selection (extend `d`/`y` & `p`)
 
